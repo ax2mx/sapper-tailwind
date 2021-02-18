@@ -1,55 +1,50 @@
 <script context="module">
-    // Page preload function
-    export async function preload(page, session) {
+  // Page preload function
+  export async function preload(page, session) {
     const res = await this.fetch(`https://jsonplaceholder.typicode.com/users`);
     const data = await res.json();
 
-    return { data };
+    const resAlias = await this.fetch(`client/alias.json`);
+    const alias = await resAlias.json();
+
+    return { data, alias };
   }
 </script>
 
 <script>
   export let data;
+  export let alias;
 
-  async function getRandomUser(data) {
-
-      // Get random item from list
-      const index = Math.floor(Math.random() * data.length);
-      const item = data[index];
-
-      // console.log(item);
-
-      // Return array of properties
-      return Object.entries(item);
-  }
-
-  let promise = getRandomUser(data);
-
-  function handleClick() {
-    promise = getRandomUser(data);
-    console.log(promise);
-  }
+  const renameProp = (prop) => {
+    if (prop in alias) {
+      return alias[prop];
+    } else {
+      return prop;
+    }
+  };
 </script>
 
-<!--<button class="rounded bg-indigo-800 hover:bg-indigo-600 text-white py-2 px-4" on:click={handleClick}>-->
-<!--    Get random user-->
-<!--</button>-->
-
-<main class="grid grid-cols-3 h-auto w-full bg-gray-800 p-12">
+<main class="h-auto w-full bg-gray-800">
+<!--<input class="m-8 p-2 max-w-md rounded-md" value="Поиск" type="search">-->
+<div class="grid lg:grid-cols-3 md:grid-cols-2 mx-auto p-16 grid-cols-1">
     {#await data then users}
+
         {#each users as user}
-            <div class="p-10 max-w-md bg-white rounded-xl space-y-1 m-6">
+            <div class="p-10 bg-gray-100 rounded-xl space-y-1 m-6">
                 <h2 class="text-3xl">{user.name}</h2>
                 {#each Object.entries(user) as [key, value]}
-                    {#if (typeof(value) !== "object") }
-                        <p>{key}: <b>{value}</b></p>
+                    {#if typeof value !== "object"}
+                        <p>{renameProp(key)}: <b>{value}</b> </p>
                     {:else}
-                        <p>
-                            <i>Some object property</i>
-                        </p>
+                        <!--            <p>-->
+                        <!--              <i>Some object property</i>-->
+                        <!--            </p>-->
                     {/if}
                 {/each}
             </div>
         {/each}
+
     {/await}
+</div>
+
 </main>

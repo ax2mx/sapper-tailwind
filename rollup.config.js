@@ -3,6 +3,7 @@ import resolve from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
 import commonjs from "@rollup/plugin-commonjs";
 import url from "@rollup/plugin-url";
+import copy from 'rollup-plugin-copy';
 import svelte from "rollup-plugin-svelte";
 import babel from "@rollup/plugin-babel";
 import { terser } from "rollup-plugin-terser";
@@ -50,6 +51,11 @@ export default {
         dedupe: ["svelte"],
       }),
       commonjs(),
+      copy({
+        targets: [
+          { src: 'src/alias.json', dest: config.client.output().dir }
+        ]
+      }),
 
       legacy &&
         babel({
