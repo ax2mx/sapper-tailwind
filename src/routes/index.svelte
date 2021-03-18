@@ -61,7 +61,12 @@
           <h2 class="text-3xl">{user.name}</h2>
           {#each Object.entries(user) as [key, value]}
             {#if typeof value !== "object"}
-              <p>{renameProp(key)}: <b>{value}</b></p>
+              <p>{renameProp(key)}:
+                {#if key==="website"} <b><a href="http://{value}" target="_blank">{value}</a></b>
+                {:else if key==="email"} <b><a href="mailto:{value}" target="_blank">{value}</a></b>
+                {:else} <b>{value}</b>
+                {/if}
+              </p>
             {/if}
           {/each}
         </Card>
