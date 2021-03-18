@@ -52,24 +52,11 @@
 />
 
 <div
-  class="grid lg:grid-cols-3 md:grid-cols-2 h-full mx-auto px-16 grid-cols-1"
->
+  class="grid lg:grid-cols-3 md:grid-cols-2 h-full mx-auto px-16 grid-cols-1" >
   {#await data then users}
     {#each users as user}
       {#if isMatching(strMatch, user.name)}
-        <Card>
-          <h2 class="text-3xl">{user.name}</h2>
-          {#each Object.entries(user) as [key, value]}
-            {#if typeof value !== "object"}
-              <p>{renameProp(key)}:
-                {#if key==="website"} <b><a href="http://{value}" target="_blank">{value}</a></b>
-                {:else if key==="email"} <b><a href="mailto:{value}" target="_blank">{value}</a></b>
-                {:else} <b>{value}</b>
-                {/if}
-              </p>
-            {/if}
-          {/each}
-        </Card>
+        <Card userData={user} {renameProp}/>
       {/if}
     {/each}
   {/await}
